@@ -4,3 +4,8 @@ egress:
   - ports:
       - protocol: TCP
         port: 443
+ingress:
+  - from:
+      - podSelector:
+          matchLabels:
+            kubevirt.io: virt-launcher
