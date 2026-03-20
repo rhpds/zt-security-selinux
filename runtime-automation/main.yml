@@ -1,3 +1,4 @@
+
 ---
 - name: Create inventory
   hosts: localhost
@@ -70,3 +71,4 @@
     ansible.builtin.fail:
       msg: "Stage failed"
     when: r_script_test.stat.exists and r_result.rc != 0
+
