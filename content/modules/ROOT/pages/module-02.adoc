@@ -63,10 +63,15 @@ The important lines here are `SELINUX=enforcing` and `SELINUXTYPE=targeted`. Not
 
 ## Step 3: Install, start, and enable the Apache Web Server
 
-We need something to break with SELinux, so we will setup a basic web server. Run the following commands to install the package, and start and enable the service:
+We need something to break with SELinux, so we will setup a basic web server. Run the following commands to install the package:
 [source,bash,role="execute",subs=attributes+]
 ----
 sudo dnf install httpd -y
+----
+
+Run the following commands to start and enable the service:
+[source,bash,role="execute",subs=attributes+]
+----
 sudo systemctl enable --now httpd
 ----
 
