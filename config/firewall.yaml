@@ -9,3 +9,8 @@ egress:
 #  - ports:
 #      - protocol: TCP
 #        port: 9090
+
+# For Apache webserver
+  - ports:
+      - protocol: TCP
+        port: 80

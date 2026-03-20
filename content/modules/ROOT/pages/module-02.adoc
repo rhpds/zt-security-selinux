@@ -25,7 +25,7 @@ sestatus
 SELinux is enabled by default, so you should see output similar to this:
 
 ....
-[lab-user@rhel ~]$ sestatus
+[rhel@rhel ~]$ sestatus
 SELinux status:                 enabled
 SELinuxfs mount:                /sys/fs/selinux
 SELinux root directory:         /etc/selinux
@@ -36,7 +36,7 @@ Policy MLS status:              enabled
 Policy deny_unknown status:     allowed
 Memory protection checking:     actual (secure)
 Max kernel policy version:      33
-[lab-user@rhel ~]$
+[rhel@rhel ~]$
 ....
 
 The key things here to note are the status (enabled), and the mode (enforcing). Let's look at the configuration next.
@@ -97,7 +97,7 @@ curl localhost
 
 Oops! Looks like something went wrong:
 .....
-[lab-user@rhel ~]$ curl localhost
+[rhel@rhel ~]$ curl localhost
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <html><head>
 <title>403 Forbidden</title>
@@ -105,7 +105,7 @@ Oops! Looks like something went wrong:
 <h1>Forbidden</h1>
 <p>You don't have permission to access this resource.</p>
 </body></html>
-[lab-user@rhel ~]$
+[rhel@rhel ~]$
 .....
 
 Let's figure out what's happening.
@@ -119,9 +119,9 @@ ls -lZ /var/www/html/index.html
 
 We see the SELinux label has a type that seems appropriate for a home directory:
 .....
-[lab-user@rhel ~]$ ls -lZ /var/www/html/index.html
--rw-r--r--. 1 lab-user lab-user unconfined_u:object_r:user_home_t:s0 0 Apr 18 13:59 /var/www/html/index.html
-[lab-user@rhel ~]$ 
+[rhel@rhel ~]$ ls -lZ /var/www/html/index.html
+-rw-r--r--. 1 rhel rhel unconfined_u:object_r:user_home_t:s0 0 Apr 18 13:59 /var/www/html/index.html
+[rhel@rhel ~]$ 
 .....
 
 Let's dig further. View the most recent Access Vector Cache (AVC) deninal from the audit log:
@@ -133,13 +133,13 @@ sudo ausearch -m AVC -ts recent
 
 You should see output similar to this:
 .....
-[lab-user@rhel ~]$ sudo ausearch -m AVC -ts recent
+[rhel@rhel ~]$ sudo ausearch -m AVC -ts recent
 ----
 time->Fri Apr 18 12:44:53 2025
 type=PROCTITLE msg=audit(1745005493.034:185): proctitle=2F7573722F7362696E2F6874747064002D44464F524547524F554E44
 type=SYSCALL msg=audit(1745005493.034:185): arch=c00000b7 syscall=56 success=no exit=-13 a0=ffffffffffffff9c a1=ffff8400c4f8 a2=80000 a3=0 items=0 ppid=1745 pid=1747 auid=4294967295 uid=48 gid=48 euid=48 suid=48 fsuid=48 egid=48 sgid=48 fsgid=48 tty=(none) ses=4294967295 comm="httpd" exe="/usr/sbin/httpd" subj=system_u:system_r:httpd_t:s0 key=(null)
 type=AVC msg=audit(1745005493.034:185): avc:  denied  { read } for  pid=1747 comm="httpd" name="index.html" dev="dm-0" ino=101288820 scontext=system_u:system_r:httpd_t:s0 tcontext=unconfined_u:object_r:user_home_t:s0 tclass=file permissive=0
-[lab-user@rhel ~]$ 
+[rhel@rhel ~]$ 
 .....
 
 This seems like the right event, but the readability can be improved. Let's try using the `sealert` command. We'll need to install the package before we run it:
@@ -201,7 +201,7 @@ sudo semanage fcontext --list | grep '/var/www(/.*)?'
 
 Ah ha! The first line we see shows that we need the `httpd_sys_content_t` file context:
 .....
-[lab-user@rhel ~]$ sudo semanage fcontext --list | grep '/var/www(/.*)?'
+[rhel@rhel ~]$ sudo semanage fcontext --list | grep '/var/www(/.*)?'
 /var/www(/.*)?                                     all files          system_u:object_r:httpd_sys_content_t:s0
 /var/www(/.*)?/logs(/.*)?                          all files          system_u:object_r:httpd_log_t:s0
 .....
@@ -224,9 +224,9 @@ sudo restorecon -Rv /var/www/html
 
 Nice! We see output that shows a label change took effect:
 .....
-[lab-user@rhel ~]$ sudo restorecon -Rv /var/www/html
+[rhel@rhel ~]$ sudo restorecon -Rv /var/www/html
 Relabeled /var/www/html/index.html from unconfined_u:object_r:user_home_t:s0 to unconfined_u:object_r:httpd_sys_content_t:s0
-[lab-user@rhel ~]$
+[rhel@rhel ~]$
 .....
 
 Now we can access the web page of server without issues:
