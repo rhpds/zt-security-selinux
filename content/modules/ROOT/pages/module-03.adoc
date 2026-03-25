@@ -1,29 +1,31 @@
-= Tabs
+= Conclusion: Mastering SELinux Fundamentals
+:toc:
 
-[source,yaml]
-----
-tabs:
-  - name: ">_ terminal"
-    type: "terminal"
-  - name: "Asciidoc Doc"
-    url: https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference/
-    external: true
-----
+== Module Summary
+In this module, we explored the practical application of **Security-Enhanced Linux (SELinux)** and its role in securing modern Linux environments. By transitioning from a "Disabled" state to "Enforcing," we observed how SELinux provides a critical layer of defense that complements standard Linux permissions.
 
-=== Explanation
+== Key Takeaways
 
-- `name`: The label that appears on the tab in the UI.
-- `type`: Defines the tab layout. Options include:
-  - `terminal`: For a single terminal-like block.
-  - `double-terminal`: For a side-by-side terminal view.
-- `url`: Used to link to an external page.
-- `path`: (If no url is defined) The base path where the service will be served, e.g., `/tty`.
-- `port`: (If no url is defined) The port where the service will be served, e.g., `3000`.
-- `external`: If `true`, the link opens in a new tab/window.
+=== 1. Understanding SELinux Modes
+We learned the three primary states of SELinux and when to use them:
+* **Disabled:** SELinux is completely off. The kernel does not label objects or enforce any mandatory policies.
+* **Permissive:** SELinux is active but does not block actions. It logs policy violations to `audit.log`, making it ideal for troubleshooting and policy development.
+* **Enforcing:** The default and recommended state. SELinux actively denies unauthorized access based on the loaded security policy.
 
-== Resulting UI
 
-You might see two tabs in your UI:
-- A terminal emulator style display
-- A link to AsciiDoc syntax reference
+=== 2. DAC vs. MAC
+The lab demonstrated the difference between:
+* **Discretionary Access Control (DAC):** Standard Linux permissions (Owner/Group/Other). If a process runs as `root`, it can bypass most DAC restrictions.
+* **Mandatory Access Control (MAC):** SELinux enforcement. Even if a process has `root` privileges, SELinux can restrict its access to only the specific files and ports defined in the policy.
 
+=== 3. Labeling and Contexts
+We explored how SELinux uses **Labels** (Contexts) to identify processes, files, and network ports. We saw that for a service like Apache (httpd) to function correctly under SELinux, its files must be labeled with the correct type (e.g., `httpd_sys_content_t`) and its ports must be defined in the policy (e.g., `http_port_t`).
+
+=== 4. Troubleshooting and Policy Adjustment
+By using tools like `ausearch`, `sealert`, and `audit2allow`, we learned how to:
+* Identify why a service was blocked.
+* Interpret AVC (Access Vector Cache) denial messages.
+* Apply targeted fixes (like `restorecon` or `semanage`) rather than disabling security globally.
+
+== Final Thought
+The "Zero Trust" approach to system security starts with the principle of **Least Privilege**. SELinux is the primary tool in RHEL for ensuring that even if an application is compromised, the attacker's "blast radius" is limited by the mandatory security policy.
