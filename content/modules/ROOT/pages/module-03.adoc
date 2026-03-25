@@ -8,14 +8,19 @@ In this module, we explored the practical application of **Security-Enhanced Lin
 
 === 1. Understanding SELinux Modes
 We learned the three primary states of SELinux and when to use them:
+
 * **Disabled:** SELinux is completely off. The kernel does not label objects or enforce any mandatory policies.
+
 * **Permissive:** SELinux is active but does not block actions. It logs policy violations to `audit.log`, making it ideal for troubleshooting and policy development.
+
 * **Enforcing:** The default and recommended state. SELinux actively denies unauthorized access based on the loaded security policy.
 
 
 === 2. DAC vs. MAC
 The lab demonstrated the difference between:
+
 * **Discretionary Access Control (DAC):** Standard Linux permissions (Owner/Group/Other). If a process runs as `root`, it can bypass most DAC restrictions.
+
 * **Mandatory Access Control (MAC):** SELinux enforcement. Even if a process has `root` privileges, SELinux can restrict its access to only the specific files and ports defined in the policy.
 
 === 3. Labeling and Contexts
@@ -23,9 +28,13 @@ We explored how SELinux uses **Labels** (Contexts) to identify processes, files,
 
 === 4. Troubleshooting and Policy Adjustment
 By using tools like `ausearch`, `sealert`, and `audit2allow`, we learned how to:
+
 * Identify why a service was blocked.
+
 * Interpret AVC (Access Vector Cache) denial messages.
+
 * Apply targeted fixes (like `restorecon` or `semanage`) rather than disabling security globally.
+
 
 == Final Thought
 The "Zero Trust" approach to system security starts with the principle of **Least Privilege**. SELinux is the primary tool in RHEL for ensuring that even if an application is compromised, the attacker's "blast radius" is limited by the mandatory security policy.
