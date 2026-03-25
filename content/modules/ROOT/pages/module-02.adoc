@@ -102,7 +102,6 @@ curl localhost
 
 Oops! Looks like something went wrong:
 .....
-[rhel@rhel ~]$ curl localhost
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <html><head>
 <title>403 Forbidden</title>
@@ -125,7 +124,7 @@ ls -lZ /var/www/html/index.html
 We see the SELinux label has a type that seems appropriate for a home directory:
 .....
 [rhel@rhel ~]$ ls -lZ /var/www/html/index.html
--rw-r--r--. 1 rhel rhel unconfined_u:object_r:user_home_t:s0 0 Apr 18 13:59 /var/www/html/index.html
+rhel rhel unconfined_u:object_r:user_home_t:s0 15 Mar 25 16:33 /var/www/html/index.html
 [rhel@rhel ~]$ 
 .....
 
@@ -140,17 +139,22 @@ You should see output similar to this:
 .....
 [rhel@rhel ~]$ sudo ausearch -m AVC -ts recent
 ----
-time->Fri Apr 18 12:44:53 2025
-type=PROCTITLE msg=audit(1745005493.034:185): proctitle=2F7573722F7362696E2F6874747064002D44464F524547524F554E44
-type=SYSCALL msg=audit(1745005493.034:185): arch=c00000b7 syscall=56 success=no exit=-13 a0=ffffffffffffff9c a1=ffff8400c4f8 a2=80000 a3=0 items=0 ppid=1745 pid=1747 auid=4294967295 uid=48 gid=48 euid=48 suid=48 fsuid=48 egid=48 sgid=48 fsgid=48 tty=(none) ses=4294967295 comm="httpd" exe="/usr/sbin/httpd" subj=system_u:system_r:httpd_t:s0 key=(null)
-type=AVC msg=audit(1745005493.034:185): avc:  denied  { read } for  pid=1747 comm="httpd" name="index.html" dev="dm-0" ino=101288820 scontext=system_u:system_r:httpd_t:s0 tcontext=unconfined_u:object_r:user_home_t:s0 tclass=file permissive=0
+time->Wed Mar 25 16:33:55 2026
+type=PROCTITLE msg=audit(1774456435.225:7450): proctitle=2F7573722F7362696E2F6874747064002D44464F524547524F554E44
+type=SYSCALL msg=audit(1774456435.225:7450): arch=c000003e syscall=257 success=no exit=-13 a0=ffffff9c a1=7f375800f9d8 a2=80000 a3=0 items=0 ppid=44779 pid=44783 auid=4294967295 uid=48 gid=48 euid=48 suid=48 fsuid=48 egid=48 sgid=48 fsgid=48 tty=(none) ses=4294967295 comm="httpd" exe="/usr/sbin/httpd" subj=system_u:system_r:httpd_t:s0 key=(null)
+type=AVC msg=audit(1774456435.225:7450): avc:  denied  { read } for  pid=44783 comm="httpd" name="index.html" dev="vda3" ino=1074644 scontext=system_u:system_r:httpd_t:s0 tcontext=unconfined_u:object_r:user_home_t:s0 tclass=file permissive=0
 [rhel@rhel ~]$ 
 .....
 
-This seems like the right event, but the readability can be improved. Let's try using the `sealert` command. We'll need to install the package before we run it:
+This seems like the right event, but the readability can be improved. Let's install the tool called `sealert` which helps take SELinx Logs and then help with suggestions on how to fix it.
 [source,bash,role="execute",subs=attributes+]
 ----
 sudo dnf install setroubleshoot-server -y
+----
+
+Let's try using the `sealert` command.:
+[source,bash,role="execute",subs=attributes+]
+----
 sudo sealert --analyze /var/log/audit/audit.log
 ----
 
@@ -163,10 +167,11 @@ SELinux is preventing /usr/sbin/httpd from read access on the file index.html.
 <<< OUTPUT ABRIDGED >>>
 .....
 
-This confirms that this is the error event we need to review. We then see a helpful suggestion:
+This confirms that this is the error event we need to review. We then see a helpful suggestion with configence ratings on the fix:
 .....
 <<< OUTPUT ABRIDGED >>>
 
+*****  Plugin catchall_boolean (89.3 confidence) suggests   ******************
 If you want to allow httpd to read user content
 Then you must tell SELinux about this by enabling the 'httpd_read_user_content' boolean.
 
