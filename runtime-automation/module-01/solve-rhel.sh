@@ -1,5 +1,4 @@
 #!/bin/sh
-echo "Solved module called module-01" >> /tmp/progress.log
 
 sestatus
 
@@ -22,6 +21,7 @@ ls -lZ /var/www/html/index.html
 sudo ausearch -m AVC -ts recent
 
 sudo dnf install setroubleshoot-server -y
+echo "Solved module called module-01" >> /tmp/progress.log
 
 sudo sealert --analyze /var/log/audit/audit.log
 
@@ -31,3 +31,4 @@ sudo restorecon -Rv /var/www/html
 
 curl localhost
 
+echo "Solved module called module-01" >> /tmp/progress.log
