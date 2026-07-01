@@ -1,0 +1,85 @@
+= Create Web Content
+
+== The Problem Emerges
+
+Now let's create some custom web content. This is where Manager Scott's "help" starts to cause problems.
+
+== Create an HTML File
+
+First, let's create a simple HTML file in your home directory:
+
+[source,bash,role=execute]
+----
+cat > ~/index.html << 'INNEREOF'
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Super-Business Web Server</title>
+</head>
+<body>
+    <h1>Welcome to Super-Business!</h1>
+    <p>This is our super-businessey web server.</p>
+</body>
+</html>
+INNEREOF
+----
+
+== Move the File to Apache's Document Root
+
+Now move the file to Apache's document root directory:
+
+[source,bash,role=execute]
+----
+sudo mv ~/index.html /var/www/html/
+----
+
+[NOTE]
+====
+*From: Manager Scott*
+
+See? I told you it would work! Just create the file and move it to the right place. Easy!
+
+-Scott
+====
+
+== Test the Web Page
+
+Try to access the web page:
+
+[source,bash,role=execute]
+----
+curl localhost
+----
+
+[IMPORTANT]
+====
+**Problem!** You will see a 403 Forbidden error instead of your custom HTML.
+
+The web server returns a permission denied error, even though the file permissions look correct!
+====
+
+[NOTE]
+====
+*From: Nate (Senior Sysadmin)*
+
+And there it is. Classic Scott move.
+
+When you create a file in your home directory and then *move* it somewhere else, it keeps its original SELinux context.
+
+That file thinks it's still a home directory file. SELinux sees that Apache is trying to read a "home file" and blocks it.
+
+If Scott had *copied* the file instead of moving it, this wouldn't have happened. Copying applies the destination directory's default context.
+
+Next module, we'll dig into the details and fix this properly.
+
+-Nate
+====
+
+== Key Concept
+
+**Moving vs. Copying Files:**
+
+* **Moving** a file preserves its original SELinux context (potentially incorrect for the new location)
+* **Copying** a file applies the destination directory's default SELinux context (usually correct)
+
+This is one of the most common causes of mysterious permission denied errors with SELinux!

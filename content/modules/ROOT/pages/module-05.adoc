@@ -1,0 +1,90 @@
+= Troubleshoot SELinux Context
+
+== Investigating the Problem
+
+Now that we've encountered the 403 Forbidden error, let's use SELinux tools to diagnose what went wrong.
+
+== Check the File's SELinux Label
+
+SELinux uses security contexts (also called labels) to control access. Let's check what context our index.html file has:
+
+[source,bash,role=execute]
+----
+ls -lZ /var/www/html/index.html
+----
+
+You'll see output like:
+
+----
+-rw-r--r--. 1 root root unconfined_u:object_r:user_home_t:s0 106 ... /var/www/html/index.html
+----
+
+The important part is `user_home_t` - this is the SELinux type context. This file is labeled as belonging in a user's home directory!
+
+[IMPORTANT]
+====
+The file has the **user_home_t** context, which is wrong for files in /var/www/html/. Apache is not allowed to read files with this context.
+====
+
+== Review AVC Denials
+
+SELinux logs access denials to the audit log. Let's check for recent denials:
+
+[source,bash,role=execute]
+----
+sudo ausearch -m AVC -ts recent
+----
+
+You'll see entries showing that httpd was denied access to files with the user_home_t context.
+
+== Install SELinux Troubleshooting Tools
+
+RHEL includes helpful tools for analyzing SELinux issues:
+
+[source,bash,role=execute]
+----
+sudo dnf install setroubleshoot-server -y
+----
+
+== Analyze the Audit Log
+
+Now use sealert to get detailed analysis and suggestions:
+
+[source,bash,role=execute]
+----
+sudo sealert --analyze /var/log/audit/audit.log
+----
+
+The tool will identify the problem and suggest solutions!
+
+[NOTE]
+====
+*From: Nate (Senior Sysadmin)*
+
+The setroubleshoot tools are a lifesaver. They don't just tell you what went wrong - they actually suggest the commands to fix it.
+
+Back in the early days of SELinux, you had to decode all this stuff manually. Now the tools do most of the work for you.
+
+That said, you still need to understand *why* the fix works, not just blindly run the suggested commands. That's how you avoid creating new problems while fixing old ones.
+
+-Nate
+====
+
+== Check the Correct Policy
+
+Let's see what context files in /var/www/ should have:
+
+[source,bash,role=execute]
+----
+sudo semanage fcontext --list | grep '/var/www(/.*)?'
+----
+
+You'll see that files in /var/www/ should have the **httpd_sys_content_t** context, not user_home_t.
+
+== Key Takeaways
+
+* The `-Z` option with ls shows SELinux contexts
+* `ausearch` helps find SELinux denial messages in the audit log
+* `setroubleshoot-server` provides analysis and fix suggestions
+* `semanage fcontext` shows the policy rules for file contexts
+* Web content should have the **httpd_sys_content_t** context

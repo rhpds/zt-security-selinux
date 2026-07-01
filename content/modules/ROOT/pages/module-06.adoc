@@ -1,0 +1,117 @@
+= Fix File Contexts
+
+== Restoring the Correct Context
+
+Now that we understand the problem, let's fix it by restoring the correct SELinux context.
+
+== Use restorecon to Fix the Context
+
+The `restorecon` command resets file contexts to match the SELinux policy defaults:
+
+[source,bash,role=execute]
+----
+sudo restorecon -Rv /var/www/html
+----
+
+The `-R` flag makes it recursive (affects all files in the directory), and `-v` makes it verbose so you can see what changed.
+
+You should see output like:
+
+----
+Relabeled /var/www/html/index.html from unconfined_u:object_r:user_home_t:s0 to unconfined_u:object_r:httpd_sys_content_t:s0
+----
+
+[NOTE]
+====
+The context changed from **user_home_t** to **httpd_sys_content_t** - exactly what we needed!
+====
+
+== Verify the Fix
+
+Check the file's context again:
+
+[source,bash,role=execute]
+----
+ls -lZ /var/www/html/index.html
+----
+
+Now it should show **httpd_sys_content_t**.
+
+== Test the Web Page
+
+Now try accessing the web page again:
+
+[source,bash,role=execute]
+----
+curl localhost
+----
+
+Success! You should now see your custom HTML content:
+
+----
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Super-Business Web Server</title>
+</head>
+<body>
+    <h1>Welcome to Super-Business!</h1>
+    <p>This is our super-businessey web server.</p>
+</body>
+</html>
+----
+
+[NOTE]
+====
+*From: Manager Scott*
+
+Wow, that was... complicated. But it works now!
+
+I guess I should have copied the file instead of moving it, huh? Who knew?
+
+Thanks for fixing my mistake!
+
+-Scott
+====
+
+[NOTE]
+====
+*From: Nate (Senior Sysadmin)*
+
+Nice work! You just solved one of the most common SELinux problems in the real world.
+
+Here's the pattern to remember:
+
+1. Something doesn't work (permission denied, 403 error, etc.)
+2. Check SELinux contexts with `ls -lZ`
+3. Check audit log with `ausearch` or `sealert`
+4. Fix with `restorecon` if files are in the right place but have wrong contexts
+5. Verify it worked
+
+The key insight is that SELinux isn't just another "permission system to fight with" - it's actually doing its job by preventing Apache from reading files that don't belong in the web directory. The problem was the file context, not SELinux itself.
+
+Most "SELinux is blocking me" complaints are really "I put a file in the wrong place or moved it incorrectly" problems. Once you learn to read the context labels, SELinux becomes a helpful security tool instead of a mysterious obstacle.
+
+Welcome to the team!
+
+-Nate
+====
+
+== Summary
+
+You've successfully:
+
+* Diagnosed an SELinux context problem using `ls -lZ` and audit logs
+* Understood the difference between moving and copying files
+* Fixed the context using `restorecon`
+* Verified the fix by accessing the web content
+
+== Best Practices
+
+* **Always check SELinux contexts** when troubleshooting permission issues
+* **Use `cp` instead of `mv`** when placing files in service directories - copying applies correct contexts
+* **Run `restorecon`** after moving files to fix incorrect contexts
+* **Use `setroubleshoot-server`** for helpful analysis and suggestions
+* **Don't disable SELinux** - learn to work with it instead
+
+Congratulations on completing the SELinux Fundamentals lab!
