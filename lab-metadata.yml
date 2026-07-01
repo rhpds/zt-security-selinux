@@ -1,0 +1,51 @@
+# lab-metadata.yml
+# Single Point of Truth for Lab Information
+
+lab:
+  name: "Security: SELinux 101 Lab"
+  shortname: "zt-security-selinux"
+  maintainer: "Joshua Loscar (jloscar@redhat.com)" 
+  
+  description:
+    summary: "This hands-on lab teaches you how to configure and use the Security-Enhanced Linux (SELinux) for security monitoring and compliance in Red Hat Enterprise Linux."
+    goal: "You will leave with practical knowledge on how to install, configure, and manage SELinux as a security tool, enabling them to apply what they have learned in real-world scenarios on Red Hat Enterprise Linux systems."
+    concepts:
+      - "Provide a strong foundation for the security of your RHEL infrastructure"
+      - "Satisfy Compliance requirements from frameworks like CIS, DISA STIG, or HIPAA"
+      - "Monitor for malicious activity and maintain the integrity of your system"
+    use_case: "Get familliar with SELinux on RHEL"
+    time_to_complete: "30" # time in minutes
+    
+  # Git references for deployment
+  git_ref:
+    production: "prod"
+    development: "dev"
+
+# DYNAMIC EXTRACTION SOURCES:
+# ===========================
+#
+# GENERATED FILES:
+# description.adoc: Generated from lab.description (goal, concepts, use_case)
+# README.md: Generated from configuration extraction (maintainer, summary, instances, networks, firewall)
+# dev.yaml: Generated using git_ref.development
+# prod.yaml: Generated using git_ref.production
+#
+# Example usage:
+# lab:
+#   name: "Red Hat OpenShift Networking Basics"
+#   shortname: "zt-networking-basics"
+#   
+#   description:
+#     summary: "Learn the fundamentals of networking in Red Hat OpenShift"
+#     goal: "Understand OpenShift networking concepts and configuration"
+#     concepts:
+#       - "OpenShift Services"
+#       - "Routes and Ingress"
+#       - "Network Policies"
+#     use_case: "Configure secure networking for containerized applications"
+#   
+#   git_ref:
+#     production: "prod"
+#     development: "dev"
+#
+#   maintainer: "Wilson Harris (wharris@redhat.com)"
