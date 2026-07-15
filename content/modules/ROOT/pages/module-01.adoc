@@ -35,15 +35,9 @@ Join us on this journey to enhance your RHEL security skills and protect your sy
 
 ### Lab Environnement
 
-As part of this lab you will have access to 2 machines.
+As part of this lab you will have access to 1 machine:
 
 * rhel
-
-You will have a couple of accounts you will have access to.
-
-* rhel
-* root
-
 
 **Lab Note:** If Using Red Hat Demo System (RHPDS)
 The terminal window to your right is already logged into the lab environment as the lab-user user via ssh. All steps of this lab are to be completed as the lab-user user on the bastion server.
