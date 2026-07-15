@@ -51,7 +51,7 @@ You will have a couple of accounts you will have access to.
 ====
 *Lab Note: If Using Red Hat Demo System (RHPDS)*
 
-The terminal window to your right is already logged into the lab environment as the `lab-user` user via SSH. All steps of this lab are to be completed as the `lab-user` user on the bastion server.
+The terminal window to your right is already logged into the lab environment as the `rhel` user via SSH. All steps of this lab are to be completed as the `rhel` user on the bastion server.
 
 When you follow the next steps, you will have instructions followed by a small box with text that is meant to be used in the terminal. In the upper right corner there will be a couple of symbols. It should say something like "BASH", an icon of a clipboard, and an icon of a terminal.
 
