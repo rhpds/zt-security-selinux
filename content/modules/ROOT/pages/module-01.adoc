@@ -1,44 +1,63 @@
 = Welcome to Enabling RHEL Security: SELinux
+:toc:
+:icons: font
+:experimental:
 
-# SELinux 
-## Objective
+== Objective
 
 By the end of this guided lab exercise, you will be able to:
 
-1. Understand what SELinux is and its role in system security.
-2. Configure basic SELinux settings.
-3. Troubleshoot common SELinux issues.
-4. Manage SELinux contexts.
+* Understand what SELinux is and its role in system security.
+* Configure basic SELinux settings.
+* Troubleshoot common SELinux issues.
+* Manage SELinux contexts.
 
-## Introduction
+== Introduction
 
-SELinux (Security-Enhanced Linux) is a security architecture for Linux systems, providing mechanisms for supporting access control security policies. This lab will
-guide you through initial setup and configuration of SELinux, as well as troubleshooting common issues.
+SELinux (Security-Enhanced Linux) is a security architecture for Linux systems, providing mechanisms for supporting access control security policies. This lab will guide you through initial setup and configuration of SELinux, as well as troubleshooting common issues.
 
 Join us on this journey to enhance your RHEL security skills and protect your systems from the ever-evolving landscape of cyber threats.
 
-### Lab Environnement
+== Lab Environment
 
 As part of this lab you will have access to 1 machine:
 
 * rhel
 
+=== Environment Diagram
+
+[source,text]
+----
+                         Lab Environment
+    ┌──────────────────────────────────────────────────────┐
+    │                                                      │
+    │   ┌──────────────┐              ┌──────────────┐    │
+    │   │   bastion    │    SSH       │     rhel     │    │
+    │   │              │─────────────▶│              │    │
+    │   │    rhel      │              │  rhel, root  │    │
+    │   └──────────────┘              └──────────────┘    │
+    │                                                      │
+    └──────────────────────────────────────────────────────┘
+----
+
 You will have a couple of accounts you will have access to.
+
+*rhel*
 
 * rhel
 * root
 
-**Lab Note:** If Using Red Hat Demo System (RHPDS)
-The terminal window to your right is already logged into the lab environment as the lab-user user via ssh. All steps of this lab are to be completed as the lab-user user on the bastion server.
+[NOTE]
+====
+*Lab Note: If Using Red Hat Demo System (RHPDS)*
 
-When you follow the next steps, you will have instructions then a small box with text that is meant to be used in the terminal.
-In the Upper Right Corner there will be a couple of symbols. It Should say something like "BASH", a icon of a clipboard, and an icon of a terminal.
+The terminal window to your right is already logged into the lab environment as the `rhel` user via SSH. All steps of this lab are to be completed as the `rhel` user on the bastion server.
 
-You should also be able to click the terminal icon and the command is then auto typed into the machine terminal.
+When you follow the next steps, you will have instructions followed by a small box with text that is meant to be used in the terminal. In the upper right corner there will be a couple of symbols. It should say something like "BASH", an icon of a clipboard, and an icon of a terminal.
 
-Alternatively, 
+You should also be able to click the terminal icon and the command is then auto-typed into the machine terminal.
 
-You should be able to click the clipboard icon in the code box to copy the command, and you will either use the middle mouse button or right click and paste. The keyboard shortcuts for copy and paste (ctrl+c and ctrl+v) wont’t work in this.
+Alternatively, you should be able to click the clipboard icon in the code box to copy the command, and you will either use the middle mouse button or right click and paste. The keyboard shortcuts for copy and paste (`Ctrl+C` and `Ctrl+V`) won't work in this environment.
 
-To Move to the next step, click the "Next" button.
-
+To move to the next step, click the *Next* button.
+====
