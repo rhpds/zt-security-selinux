@@ -1,36 +1,63 @@
-== Welcome to Enabling RHEL Security for SELinux
+= Welcome to Enabling RHEL Security: SELinux
+:toc:
+:icons: font
+:experimental:
 
-= Are You Ready to Elevate Your Red Hat Enterprise Linux Security Skills?
+== Objective
 
-In an era where cyber threats are increasingly sophisticated, securing Red Hat Enterprise Linux (RHEL) systems has never been more critical. In this lab, we'll explore three RHEL native tools that can transform your approach to security and safeguard your digital assets:
+By the end of this guided lab exercise, you will be able to:
 
-. **SELinux** (Security-Enhanced Linux) implements Mandatory Access Control (MAC)
+* Understand what SELinux is and its role in system security.
+* Configure basic SELinux settings.
+* Troubleshoot common SELinux issues.
+* Manage SELinux contexts.
 
-SELinux provides a strong foundation for security, fapolicyd enhances file access control, and Auditd helps monitor system activity for potential threats. Together, they can help ensure the security of your digital assets and protect your infrastructure from cyber attacks.
+== Introduction
 
-=== You will learn how to:
+SELinux (Security-Enhanced Linux) is a security architecture for Linux systems, providing mechanisms for supporting access control security policies. This lab will guide you through initial setup and configuration of SELinux, as well as troubleshooting common issues.
 
-Users will leave with practical knowledge on how to install, configure, and manage these security tools, enabling them to apply what they have learned in real-world scenarios.
+Join us on this journey to enhance your RHEL security skills and protect your systems from the ever-evolving landscape of cyber threats.
 
+== Lab Environment
 
+As part of this lab you will have access to 1 machine:
 
-=== Getting Started
+* rhel
 
-* Follow the Documentation to do this on your own linux machine inside of a VM.
+=== Environment Diagram
 
-=== How to Follow along with the lab.
+[source,text]
+----
+                         Lab Environment
+    ┌──────────────────────────────────────────────────────┐
+    │                                                      │
+    │   ┌──────────────┐              ┌──────────────┐    │
+    │   │   bastion    │    SSH       │     rhel     │    │
+    │   │              │─────────────▶│              │    │
+    │   │    rhel      │              │  rhel, root  │    │
+    │   └──────────────┘              └──────────────┘    │
+    │                                                      │
+    └──────────────────────────────────────────────────────┘
+----
 
-* https://github.com/rhpds/showroom-lb1624-rhel-security/blob/main/content/modules/ROOT/pages/index.adoc[Lab 0: Landing Intro Page]
-* https://github.com/rhpds/showroom-lb1624-rhel-security/blob/main/content/modules/ROOT/pages/SELinux.adoc[Lab 1: SELinux]
-* https://github.com/rhpds/showroom-lb1624-rhel-security/blob/main/content/modules/
+You will have a couple of accounts you will have access to.
 
-=== Speaker Information:
+*rhel*
 
-* Joshua Loscar 
-** Senior Technical Account Manager, Red Hat
+* rhel
+* root
 
+[NOTE]
+====
+*Lab Note: If Using Red Hat Demo System (RHPDS)*
 
+The terminal window to your right is already logged into the lab environment as the `lab-user` user via SSH. All steps of this lab are to be completed as the `lab-user` user on the bastion server.
 
-=== Presentation Slides:
+When you follow the next steps, you will have instructions followed by a small box with text that is meant to be used in the terminal. In the upper right corner there will be a couple of symbols. It should say something like "BASH", an icon of a clipboard, and an icon of a terminal.
 
+You should also be able to click the terminal icon and the command is then auto-typed into the machine terminal.
 
+Alternatively, you should be able to click the clipboard icon in the code box to copy the command, and you will either use the middle mouse button or right click and paste. The keyboard shortcuts for copy and paste (`Ctrl+C` and `Ctrl+V`) won't work in this environment.
+
+To move to the next step, click the *Next* button.
+====
