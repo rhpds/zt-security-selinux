@@ -1,18 +1,3 @@
-# SELinux 
-## Objective
-
-By the end of this guided lab exercise, you will be able to:
-
-1. Understand what SELinux is and its role in system security.
-2. Configure basic SELinux settings.
-3. Troubleshoot common SELinux issues.
-4. Manage SELinux contexts.
-
-## Introduction
-
-SELinux (Security-Enhanced Linux) is a security architecture for Linux systems, providing mechanisms for supporting access control security policies. This lab will
-guide you through initial setup and configuration of SELinux, as well as troubleshooting common issues.
-
 ## Step 1: Verify SELinux Status
 
 First, let's check if SELinux is currently enabled on your system. Open a terminal and run the following command:
