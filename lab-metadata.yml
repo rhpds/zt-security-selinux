@@ -2,7 +2,7 @@
 # Single Point of Truth for Lab Information
 
 lab:
-  name: "Security: SELinux 101 Lab"
+  name: "Security SELinux 101 Lab"
   shortname: "zt-security-selinux"
   maintainer: "Joshua Loscar (jloscar@redhat.com)" 
   
