@@ -5,13 +5,17 @@ antora:
   dir: www
   modules:
     - name: module-01
-      label: "Introduction"
+      label: "Step 1"
     - name: module-02
-      label: "SELinux"
-      solveButton: true
+      label: "Step 2"
     - name: module-03
-      label: "Summary"
-
+      label: "Step 3"
+    - name: module-04
+      label: "Step 4"
+    - name: module-05
+      label: "Step 5"
+    - name: module-06
+      label: "Step 6"
 tabs:
   - name: ">_ terminal"
     url: /wetty

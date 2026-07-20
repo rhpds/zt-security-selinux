@@ -1,90 +1,102 @@
-= Troubleshoot SELinux Context
+## Step 5: Troubleshooting SELinux Issues
 
-== Investigating the Problem
-
-Now that we've encountered the 403 Forbidden error, let's use SELinux tools to diagnose what went wrong.
-
-== Check the File's SELinux Label
-
-SELinux uses security contexts (also called labels) to control access. Let's check what context our index.html file has:
-
-[source,bash,role=execute]
+Step 5.1 First, let's look at the long-listing of our web content, including the SELinux label:
+[source,bash,role="execute",subs=attributes+]
 ----
 ls -lZ /var/www/html/index.html
 ----
 
-You'll see output like:
+Step 5.2 We see the SELinux label has a type that seems appropriate for a home directory:
+.....
+[rhel@rhel ~]$ ls -lZ /var/www/html/index.html
+rhel rhel unconfined_u:object_r:user_home_t:s0 15 Mar 25 16:33 /var/www/html/index.html
+[rhel@rhel ~]$ 
+.....
 
-----
--rw-r--r--. 1 root root unconfined_u:object_r:user_home_t:s0 106 ... /var/www/html/index.html
-----
-
-The important part is `user_home_t` - this is the SELinux type context. This file is labeled as belonging in a user's home directory!
-
-[IMPORTANT]
-====
-The file has the **user_home_t** context, which is wrong for files in /var/www/html/. Apache is not allowed to read files with this context.
-====
-
-== Review AVC Denials
-
-SELinux logs access denials to the audit log. Let's check for recent denials:
-
-[source,bash,role=execute]
+Step 5.3 Let's dig further. View the most recent Access Vector Cache (AVC) deninal from the audit log:
+[source,bash,role="execute",subs=attributes+]
 ----
 sudo ausearch -m AVC -ts recent
 ----
 
-You'll see entries showing that httpd was denied access to files with the user_home_t context.
+You should see output similar to this:
+.....
+[rhel@rhel ~]$ sudo ausearch -m AVC -ts recent
+----
+time->Wed Mar 25 16:33:55 2026
+type=PROCTITLE msg=audit(1774456435.225:7450): proctitle=2F7573722F7362696E2F6874747064002D44464F524547524F554E44
+type=SYSCALL msg=audit(1774456435.225:7450): arch=c000003e syscall=257 success=no exit=-13 a0=ffffff9c a1=7f375800f9d8 a2=80000 a3=0 items=0 ppid=44779 pid=44783 auid=4294967295 uid=48 gid=48 euid=48 suid=48 fsuid=48 egid=48 sgid=48 fsgid=48 tty=(none) ses=4294967295 comm="httpd" exe="/usr/sbin/httpd" subj=system_u:system_r:httpd_t:s0 key=(null)
+type=AVC msg=audit(1774456435.225:7450): avc:  denied  { read } for  pid=44783 comm="httpd" name="index.html" dev="vda3" ino=1074644 scontext=system_u:system_r:httpd_t:s0 tcontext=unconfined_u:object_r:user_home_t:s0 tclass=file permissive=0
+[rhel@rhel ~]$ 
+.....
 
-== Install SELinux Troubleshooting Tools
-
-RHEL includes helpful tools for analyzing SELinux issues:
-
-[source,bash,role=execute]
+Step 5.4 This seems like the right event, but the readability can be improved. Let's install the tool called `sealert` which helps take SELinx Logs and then help with suggestions on how to fix it.
+[source,bash,role="execute",subs=attributes+]
 ----
 sudo dnf install setroubleshoot-server -y
 ----
 
-== Analyze the Audit Log
-
-Now use sealert to get detailed analysis and suggestions:
-
-[source,bash,role=execute]
+Step 5.5 Let's try using the `sealert` command.:
+[source,bash,role="execute",subs=attributes+]
 ----
 sudo sealert --analyze /var/log/audit/audit.log
 ----
 
-The tool will identify the problem and suggest solutions!
+Step 5.6 There's a lot here, so let's break down the relevant parts:
+.....
+<<< OUTPUT ABRIDGED >>>
 
-[NOTE]
-====
-*From: Nate (Senior Sysadmin)*
+SELinux is preventing /usr/sbin/httpd from read access on the file index.html.
 
-The setroubleshoot tools are a lifesaver. They don't just tell you what went wrong - they actually suggest the commands to fix it.
+<<< OUTPUT ABRIDGED >>>
+.....
 
-Back in the early days of SELinux, you had to decode all this stuff manually. Now the tools do most of the work for you.
+This confirms that this is the error event we need to review. We then see a helpful suggestion with configence ratings on the fix:
+.....
+<<< OUTPUT ABRIDGED >>>
 
-That said, you still need to understand *why* the fix works, not just blindly run the suggested commands. That's how you avoid creating new problems while fixing old ones.
+*****  Plugin catchall_boolean (89.3 confidence) suggests   ******************
+If you want to allow httpd to read user content
+Then you must tell SELinux about this by enabling the 'httpd_read_user_content' boolean.
 
--Nate
-====
+Do
+setsebool -P httpd_read_user_content 1
 
-== Check the Correct Policy
+*****  Plugin catchall (11.6 confidence) suggests   **************************
 
-Let's see what context files in /var/www/ should have:
+If you believe that httpd should be allowed read access on the index.html file by default.
+Then you should report this as a bug.
+You can generate a local policy module to allow this access.
+Do
+allow this access for now by executing:
+# ausearch -c 'httpd' --raw | audit2allow -M my-httpd
+# semodule -X 300 -i my-httpd.pp
 
-[source,bash,role=execute]
+<<< OUTPUT ABRIDGED >>>
+.....
+
+As helpful as this is, it's not what we're after. We don't want to change SELinux booleans or policies. We want to change the label to what the system expects by default. Find this line under "Additional Information":
+.....
+<<< OUTPUT ABRIDGED >>>
+
+Target Context                unconfined_u:object_r:user_home_t:s0
+
+<<< OUTPUT ABRIDGED >>>
+
+.....
+
+That's good enough to see that the SELinux file context is likely the issue. But what do we actually need it to be?
+
+Step 5.7 Let's review the local policy for this directory path. The `semanage` command is useful for viewing and modifying policy, There's a lot of policy configured, so we will need to use a regular expression to search for our specific path:
+[source,bash,role="execute",subs=attributes+]
 ----
 sudo semanage fcontext --list | grep '/var/www(/.*)?'
 ----
 
-You'll see that files in /var/www/ should have the **httpd_sys_content_t** context, not user_home_t.
+Ah ha! The first line we see shows that we need the `httpd_sys_content_t` file context:
+.....
+[rhel@rhel ~]$ sudo semanage fcontext --list | grep '/var/www(/.*)?'
+/var/www(/.*)?                                     all files          system_u:object_r:httpd_sys_content_t:s0
+/var/www(/.*)?/logs(/.*)?                          all files          system_u:object_r:httpd_log_t:s0
+.....
 
-== Key Takeaways
-
-* The `-Z` option with ls shows SELinux contexts
-* `ausearch` helps find SELinux denial messages in the audit log
-* `setroubleshoot-server` provides analysis and fix suggestions
-* `semanage fcontext` shows the policy rules for file contexts
-* Web content should have the **httpd_sys_content_t** context

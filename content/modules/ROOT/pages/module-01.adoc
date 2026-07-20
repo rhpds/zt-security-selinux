@@ -3,6 +3,8 @@
 :icons: font
 :experimental:
 
+## Step 1: About This Lab
+
 == Objective
 
 By the end of this guided lab exercise, you will be able to:

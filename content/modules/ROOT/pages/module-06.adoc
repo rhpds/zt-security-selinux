@@ -1,100 +1,35 @@
-= Fix File Contexts
+## Step 6: Fixing SELinux File Contexts
 
-== Restoring the Correct Context
+There are a couple of ways of addressing the issue here. We could:
 
-Now that we understand the problem, let's fix it by restoring the correct SELinux context.
+1. Delete the file and start over
+2. Fix the labeling of the file that exists
 
-== Use restorecon to Fix the Context
+Option 1 has the benefit of starting clean, but may not always be an option in real-world situations. We won't be following that in this guide. For your own personal reference, **copying** a file to a new location will automatically apply the correct SELinux file context, while **moving** a file will keep the original SELinux file context, risking being mislabled in its new path. That is exactly the "mistake" we made in step 4 of this lab. Let's look at option 2 now. 
 
-The `restorecon` command resets file contexts to match the SELinux policy defaults:
-
-[source,bash,role=execute]
+Step 6.1 The `restorecon` command is used to restore the default SELinux context based on the system policy. We learned in Step 5 that the system policy shows `httpd_sys_content_t` is the correct label. Let's use `restorecon` to recursively fix labeling issues with verbose output:
+[source,bash,role="execute",subs=attributes+]
 ----
 sudo restorecon -Rv /var/www/html
 ----
 
-The `-R` flag makes it recursive (affects all files in the directory), and `-v` makes it verbose so you can see what changed.
-
-You should see output like:
-
-----
+Step 6.2 Nice! We see output that shows a label change took effect:
+.....
+[rhel@rhel ~]$ sudo restorecon -Rv /var/www/html
 Relabeled /var/www/html/index.html from unconfined_u:object_r:user_home_t:s0 to unconfined_u:object_r:httpd_sys_content_t:s0
-----
+[rhel@rhel ~]$
+.....
 
-[NOTE]
-====
-The context changed from **user_home_t** to **httpd_sys_content_t** - exactly what we needed!
-====
-
-== Verify the Fix
-
-Check the file's context again:
-
-[source,bash,role=execute]
-----
-ls -lZ /var/www/html/index.html
-----
-
-Now it should show **httpd_sys_content_t**.
-
-== Test the Web Page
-
-Now try accessing the web page again:
-
-[source,bash,role=execute]
+Step 6.3 Now we can access the web page of server without issues:
+[source,bash,role="execute",subs=attributes+]
 ----
 curl localhost
 ----
 
-Success! You should now see your custom HTML content:
-
+Step 6.4 Now that we have the correct SElinux Context, the file should output.
 ----
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Super-Business Web Server</title>
-</head>
-<body>
-    <h1>Welcome to Super-Business!</h1>
-    <p>This is our super-businessey web server.</p>
-</body>
-</html>
+Test HTML file
 ----
-
-[NOTE]
-====
-*From: Manager Scott*
-
-Wow, that was... complicated. But it works now!
-
-I guess I should have copied the file instead of moving it, huh? Who knew?
-
-Thanks for fixing my mistake!
-
--Scott
-====
-
-[NOTE]
-====
-*From: Nate (Senior Sysadmin)*
-
-Nice work! You just solved one of the most common SELinux problems in the real world.
-
-Here's the pattern to remember:
-
-1. Something doesn't work (permission denied, 403 error, etc.)
-2. Check SELinux contexts with `ls -lZ`
-3. Check audit log with `ausearch` or `sealert`
-4. Fix with `restorecon` if files are in the right place but have wrong contexts
-5. Verify it worked
-
-The key insight is that SELinux isn't just another "permission system to fight with" - it's actually doing its job by preventing Apache from reading files that don't belong in the web directory. The problem was the file context, not SELinux itself.
-
-Most "SELinux is blocking me" complaints are really "I put a file in the wrong place or moved it incorrectly" problems. Once you learn to read the context labels, SELinux becomes a helpful security tool instead of a mysterious obstacle.
-
-Welcome to the team!
-
--Nate
 ====
 
 == Summary
