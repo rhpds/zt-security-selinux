@@ -1,6 +1,6 @@
 ## Step 2: Verify SELinux Status
 
-Step 2.1 First, let's check if SELinux is currently enabled on your system. Open a terminal and run the following command:
+**Step 2.1** First, let's check if SELinux is currently enabled on your system. Open a terminal and run the following command:
 [source,bash,role="execute",subs=attributes+]
 ----
 sestatus
@@ -34,10 +34,12 @@ recommended for production systems.
 
 - **Disabled:** SELinux policies are not enforced, but logs are still active.
 
-Step 2.2 To change the SELinux mode, use the `setenforce` command:
+**Step 2.2** To change the SELinux mode, use the `setenforce` command:
 [source,bash,role="execute",subs=attributes+]
 ----
 cat /etc/selinux/config
 ----
 
 The important lines here are `SELINUX=enforcing` and `SELINUXTYPE=targeted`. Notice how they line up with the output of `sestatus`?
+
+To move to the next step, click the *Next* button.

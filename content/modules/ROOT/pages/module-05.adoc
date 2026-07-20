@@ -1,19 +1,19 @@
 ## Step 5: Troubleshooting SELinux Issues
 
-Step 5.1 First, let's look at the long-listing of our web content, including the SELinux label:
+**Step 5.1** First, let's look at the long-listing of our web content, including the SELinux label:
 [source,bash,role="execute",subs=attributes+]
 ----
 ls -lZ /var/www/html/index.html
 ----
 
-Step 5.2 We see the SELinux label has a type that seems appropriate for a home directory:
+**Step 5.2** We see the SELinux label has a type that seems appropriate for a home directory:
 .....
 [rhel@rhel ~]$ ls -lZ /var/www/html/index.html
 rhel rhel unconfined_u:object_r:user_home_t:s0 15 Mar 25 16:33 /var/www/html/index.html
 [rhel@rhel ~]$ 
 .....
 
-Step 5.3 Let's dig further. View the most recent Access Vector Cache (AVC) deninal from the audit log:
+**Step 5.3** Let's dig further. View the most recent Access Vector Cache (AVC) deninal from the audit log:
 [source,bash,role="execute",subs=attributes+]
 ----
 sudo ausearch -m AVC -ts recent
@@ -30,19 +30,19 @@ type=AVC msg=audit(1774456435.225:7450): avc:  denied  { read } for  pid=44783 c
 [rhel@rhel ~]$ 
 .....
 
-Step 5.4 This seems like the right event, but the readability can be improved. Let's install the tool called `sealert` which helps take SELinx Logs and then help with suggestions on how to fix it.
+**Step 5.4** This seems like the right event, but the readability can be improved. Let's install the tool called `sealert` which helps take SELinx Logs and then help with suggestions on how to fix it.
 [source,bash,role="execute",subs=attributes+]
 ----
 sudo dnf install setroubleshoot-server -y
 ----
 
-Step 5.5 Let's try using the `sealert` command.:
+**Step 5.5** Let's try using the `sealert` command.:
 [source,bash,role="execute",subs=attributes+]
 ----
 sudo sealert --analyze /var/log/audit/audit.log
 ----
 
-Step 5.6 There's a lot here, so let's break down the relevant parts:
+**Step 5.6** There's a lot here, so let's break down the relevant parts:
 .....
 <<< OUTPUT ABRIDGED >>>
 
@@ -87,7 +87,7 @@ Target Context                unconfined_u:object_r:user_home_t:s0
 
 That's good enough to see that the SELinux file context is likely the issue. But what do we actually need it to be?
 
-Step 5.7 Let's review the local policy for this directory path. The `semanage` command is useful for viewing and modifying policy, There's a lot of policy configured, so we will need to use a regular expression to search for our specific path:
+**Step 5.7** Let's review the local policy for this directory path. The `semanage` command is useful for viewing and modifying policy, There's a lot of policy configured, so we will need to use a regular expression to search for our specific path:
 [source,bash,role="execute",subs=attributes+]
 ----
 sudo semanage fcontext --list | grep '/var/www(/.*)?'
@@ -100,3 +100,4 @@ Ah ha! The first line we see shows that we need the `httpd_sys_content_t` file c
 /var/www(/.*)?/logs(/.*)?                          all files          system_u:object_r:httpd_log_t:s0
 .....
 
+To move to the next step, click the *Next* button.

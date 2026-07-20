@@ -1,18 +1,18 @@
 ## Step 4: Creating Web Content
 
-Step 4.1 Create a new file in your home directory called `index.html`. We don't need it to be valid HTML content, we just need something to play with:
+**Step 4.1** Create a new file in your home directory called `index.html`. We don't need it to be valid HTML content, we just need something to play with:
 [source,bash,role="execute",subs=attributes+]
 ----
 echo "Test HTML file" > ~/index.html
 ----
 
-Step 4.2 Move that file to the directory used to serve HTML content by default:
+**Step 4.2** Move that file to the directory used to serve HTML content by default:
 [source,bash,role="execute",subs=attributes+]
 ----
 sudo mv ~/index.html /var/www/html/
 ----
 
-Step 4.3 Test your webserver again:
+**Step 4.3** Test your webserver again:
 [source,bash,role="execute",subs=attributes+]
 ----
 curl localhost
@@ -31,3 +31,5 @@ Oops! Looks like something went wrong:
 .....
 
 Let's figure out what's happening.
+
+To move to the next step, click the *Next* button.

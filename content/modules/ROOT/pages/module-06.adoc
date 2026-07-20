@@ -7,26 +7,26 @@ There are a couple of ways of addressing the issue here. We could:
 
 Option 1 has the benefit of starting clean, but may not always be an option in real-world situations. We won't be following that in this guide. For your own personal reference, **copying** a file to a new location will automatically apply the correct SELinux file context, while **moving** a file will keep the original SELinux file context, risking being mislabled in its new path. That is exactly the "mistake" we made in step 4 of this lab. Let's look at option 2 now. 
 
-Step 6.1 The `restorecon` command is used to restore the default SELinux context based on the system policy. We learned in Step 5 that the system policy shows `httpd_sys_content_t` is the correct label. Let's use `restorecon` to recursively fix labeling issues with verbose output:
+**Step 6.1** The `restorecon` command is used to restore the default SELinux context based on the system policy. We learned in Step 5 that the system policy shows `httpd_sys_content_t` is the correct label. Let's use `restorecon` to recursively fix labeling issues with verbose output:
 [source,bash,role="execute",subs=attributes+]
 ----
 sudo restorecon -Rv /var/www/html
 ----
 
-Step 6.2 Nice! We see output that shows a label change took effect:
+**Step 6.2** Nice! We see output that shows a label change took effect:
 .....
 [rhel@rhel ~]$ sudo restorecon -Rv /var/www/html
 Relabeled /var/www/html/index.html from unconfined_u:object_r:user_home_t:s0 to unconfined_u:object_r:httpd_sys_content_t:s0
 [rhel@rhel ~]$
 .....
 
-Step 6.3 Now we can access the web page of server without issues:
+**Step 6.3** Now we can access the web page of server without issues:
 [source,bash,role="execute",subs=attributes+]
 ----
 curl localhost
 ----
 
-Step 6.4 Now that we have the correct SElinux Context, the file should output.
+**Step 6.4** Now that we have the correct SElinux Context, the file should output.
 ----
 Test HTML file
 ----
@@ -50,3 +50,5 @@ You've successfully:
 * **Don't disable SELinux** - learn to work with it instead
 
 Congratulations on completing the SELinux Fundamentals lab!
+
+To finish the lab you can close this window/tab.

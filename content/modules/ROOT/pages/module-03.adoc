@@ -1,19 +1,23 @@
 ## Step 3: Install, start, and enable the Apache Web Server
 
-Step 3.1 We need something to break with SELinux, so we will setup a basic web server. Run the following commands to install the package:
+**Step 3.1** We need something to break with SELinux, so we will setup a basic web server. Run the following commands to install the package:
 [source,bash,role="execute",subs=attributes+]
 ----
 sudo dnf install httpd -y
 ----
 
-Step 3.2 Run the following commands to start and enable the service:
+**Step 3.2** Run the following commands to start and enable the service:
 [source,bash,role="execute",subs=attributes+]
 ----
 sudo systemctl enable --now httpd
 ----
 
-Step 3.3 Test to make sure you can view the default Apache HTML content:
+**Step 3.3** Test to make sure you can view the default Apache HTML content:
 [source,bash,role="execute",subs=attributes+]
 ----
 curl localhost
 ----
+
+Now that we have a working default webpage running, lets customize it in the next step.
+
+To move to the next step, click the *Next* button.
