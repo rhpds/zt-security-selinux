@@ -13,20 +13,20 @@ Option 1 has the benefit of starting clean, but may not always be an option in r
 sudo restorecon -Rv /var/www/html
 ----
 
-**Step 6.2** Nice! We see output that shows a label change took effect:
+Nice! We see output that shows a label change took effect:
 .....
 [rhel@rhel ~]$ sudo restorecon -Rv /var/www/html
 Relabeled /var/www/html/index.html from unconfined_u:object_r:user_home_t:s0 to unconfined_u:object_r:httpd_sys_content_t:s0
 [rhel@rhel ~]$
 .....
 
-**Step 6.3** Now we can access the web page of server without issues:
+**Step 6.2** Now we can access the web page of server without issues:
 [source,bash,role="execute",subs=attributes+]
 ----
 curl localhost
 ----
 
-**Step 6.4** Now that we have the correct SElinux Context, the file should output.
+**Step 6.3** Now that we have the correct SElinux Context, the file should output.
 ----
 Test HTML file
 ----

@@ -42,7 +42,7 @@ sudo dnf install setroubleshoot-server -y
 sudo sealert --analyze /var/log/audit/audit.log
 ----
 
-**Step 5.6** There's a lot here, so let's break down the relevant parts:
+There's a lot here, so let's break down the relevant parts:
 .....
 <<< OUTPUT ABRIDGED >>>
 
@@ -87,7 +87,7 @@ Target Context                unconfined_u:object_r:user_home_t:s0
 
 That's good enough to see that the SELinux file context is likely the issue. But what do we actually need it to be?
 
-**Step 5.7** Let's review the local policy for this directory path. The `semanage` command is useful for viewing and modifying policy, There's a lot of policy configured, so we will need to use a regular expression to search for our specific path:
+**Step 5.6** Let's review the local policy for this directory path. The `semanage` command is useful for viewing and modifying policy, There's a lot of policy configured, so we will need to use a regular expression to search for our specific path:
 [source,bash,role="execute",subs=attributes+]
 ----
 sudo semanage fcontext --list | grep '/var/www(/.*)?'
