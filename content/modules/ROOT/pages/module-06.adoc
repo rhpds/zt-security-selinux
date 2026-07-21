@@ -26,10 +26,19 @@ Relabeled /var/www/html/index.html from unconfined_u:object_r:user_home_t:s0 to 
 curl localhost
 ----
 
-**Step 6.3** Now that we have the correct SElinux Context, the file should output.
+Now that we have the correct SElinux Context, the file should output.
 ----
 Test HTML file
 ----
+
+**Step 6.3** One last check to see the new SELinux permissions on the working file.
+[source,bash,role="execute",subs=attributes+]
+----
+ls -lZ /var/www/html/index.html
+----
+
+That will complete thie SELinux 101 lab.
+
 ====
 
 == Summary
