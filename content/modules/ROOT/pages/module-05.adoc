@@ -21,13 +21,11 @@ sudo ausearch -m AVC -ts recent
 
 You should see output similar to this:
 .....
-[rhel@rhel ~]$ sudo ausearch -m AVC -ts recent
-----
-time->Wed Mar 25 16:33:55 2026
+<<< OUTPUT ABRIDGED >>>
 type=PROCTITLE msg=audit(1774456435.225:7450): proctitle=2F7573722F7362696E2F6874747064002D44464F524547524F554E44
 type=SYSCALL msg=audit(1774456435.225:7450): arch=c000003e syscall=257 success=no exit=-13 a0=ffffff9c a1=7f375800f9d8 a2=80000 a3=0 items=0 ppid=44779 pid=44783 auid=4294967295 uid=48 gid=48 euid=48 suid=48 fsuid=48 egid=48 sgid=48 fsgid=48 tty=(none) ses=4294967295 comm="httpd" exe="/usr/sbin/httpd" subj=system_u:system_r:httpd_t:s0 key=(null)
 type=AVC msg=audit(1774456435.225:7450): avc:  denied  { read } for  pid=44783 comm="httpd" name="index.html" dev="vda3" ino=1074644 scontext=system_u:system_r:httpd_t:s0 tcontext=unconfined_u:object_r:user_home_t:s0 tclass=file permissive=0
-[rhel@rhel ~]$ 
+<<< OUTPUT ABRIDGED >>>
 .....
 
 **Step 5.4** This seems like the right event, but the readability can be improved. Let's install the tool called `sealert` which helps take SELinx Logs and then help with suggestions on how to fix it.
