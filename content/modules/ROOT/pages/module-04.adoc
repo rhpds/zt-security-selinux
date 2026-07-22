@@ -20,6 +20,8 @@ curl localhost
 
 Oops! Looks like something went wrong:
 .....
+<<< OUTPUT ABRIDGED >>>
+
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML 2.0//EN">
 <html><head>
 <title>403 Forbidden</title>
@@ -27,7 +29,8 @@ Oops! Looks like something went wrong:
 <h1>Forbidden</h1>
 <p>You don't have permission to access this resource.</p>
 </body></html>
-[rhel@rhel ~]$
+
+<<< OUTPUT ABRIDGED >>>
 .....
 
 Let's figure out what's happening.
