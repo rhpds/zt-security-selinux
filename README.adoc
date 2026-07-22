@@ -1,7 +1,9 @@
-= Welcome to Enabling RHEL Security: SELinux
+= Welcome to Enabling RHEL Security: SELinux 101
 :toc:
 :icons: font
 :experimental:
+
+## Step 1: About This Lab
 
 == Objective
 

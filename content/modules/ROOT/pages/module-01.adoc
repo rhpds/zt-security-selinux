@@ -1,4 +1,4 @@
-= Welcome to Enabling RHEL Security: SELinux
+= Welcome to Enabling RHEL Security: SELinux 101
 :toc:
 :icons: font
 :experimental:
