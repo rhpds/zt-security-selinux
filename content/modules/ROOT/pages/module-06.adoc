@@ -41,7 +41,6 @@ ls -lZ /var/www/html/index.html
 
 That will complete thie SELinux 101 lab.
 
-====
 
 == Summary
 
