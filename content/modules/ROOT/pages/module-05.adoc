@@ -93,9 +93,13 @@ sudo semanage fcontext --list | grep '/var/www(/.*)?'
 
 Ah ha! The first line we see shows that we need the `httpd_sys_content_t` file context:
 .....
-[rhel@rhel ~]$ sudo semanage fcontext --list | grep '/var/www(/.*)?'
+<<< OUTPUT ABRIDGED >>>
+
 /var/www(/.*)?                                     all files          system_u:object_r:httpd_sys_content_t:s0
 /var/www(/.*)?/logs(/.*)?                          all files          system_u:object_r:httpd_log_t:s0
+
+<<< OUTPUT ABRIDGED >>>
+
 .....
 
 To move to the next step, click the *Next* button.
