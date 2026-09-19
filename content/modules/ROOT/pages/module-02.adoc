@@ -34,7 +34,7 @@ recommended for production systems.
 
 - **Disabled:** SELinux policies are not enforced, but logs are still active.
 
-**Step 2.2** To change the SELinux mode, use the `setenforce` command:
+**Step 2.2** To view the SELinux configuration, use the `cat /etc/selinux/config` command:
 [source,bash,role="execute",subs=attributes+]
 ----
 cat /etc/selinux/config

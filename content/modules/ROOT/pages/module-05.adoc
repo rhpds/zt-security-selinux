@@ -49,7 +49,7 @@ SELinux is preventing /usr/sbin/httpd from read access on the file index.html.
 <<< OUTPUT ABRIDGED >>>
 .....
 
-This confirms that this is the error event we need to review. We then see a helpful suggestion with configence ratings on the fix:
+This confirms that this is the error event we need to review. We then see a helpful suggestion with confidence ratings on the fix:
 .....
 <<< OUTPUT ABRIDGED >>>
 
