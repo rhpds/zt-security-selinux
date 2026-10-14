@@ -30,11 +30,22 @@ SELinux can operate in three modes: Enforcing, Permissive, and Disabled.
 - **Enforcing:** Applies the security policy strictly, denying any actions not explicitly allowed by the defined policies. This is the secure mode and is
 recommended for production systems.
 
-- **Permissive:** Logs denied operations but does not block them. It's useful for debugging without disrupting system operation.
+- **Permissive:** SELinux monitors and logs all events but permits all operations. It's useful for debugging without disrupting system operation.
 
-- **Disabled:** SELinux policies are not enforced, but logs are still active.
+- **Disabled:** SELinux policy engine is running but no policy is loaded. No activities are checked, no events are logged.
 
-**Step 2.2** To change the SELinux mode, use the `setenforce` command:
+**Step 2.2** To to simply get the SELinux mode, use the 'getenforce' command. To temporarily change the SELinux mode, use the `setenforce` command:
+[source,bash,role="execute",subs=attributes+]
+----
+sudo setenforce  permissive
+sudo getenforce
+Permissive
+sudo setenforce enforcing
+----
+
+Making runtime changes to the SELInux mode is useful to debug policy issues or to determine is SELinux is really affecting and application.
+
+To make the change permanent, you must change the value in the following file. This determines the SELinux mode at boot time.
 [source,bash,role="execute",subs=attributes+]
 ----
 cat /etc/selinux/config
